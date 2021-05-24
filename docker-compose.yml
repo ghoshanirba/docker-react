@@ -1,0 +1,29 @@
+version: "3.3"
+
+#services list down all the separate containers
+services:
+#web is the name of the 1st service/container. 
+   web:
+      stdin_open: true
+#build: .(dot) signifies that to use the dockerfile to build the image   
+    # build: .
+# since we have Dockerfile.dev we need to add context: . which will point to the local directory and specify the dockerfile name using dockerfile: Dockerfile.dev
+      build:
+        context: .
+        dockerfile: Dockerfile.dev
+#port mapping is done as below where 1st 3000 is the localhost and 2nd 3000 is the port the web server is listening to.
+      ports: 
+        - "3000:3000"
+      volumes:
+      #the dot signifies the current working local folder which will be mapped into react-frontend folder within the container.
+ #      - /react-frontend/node_modules
+        - .:/react-frontend 
+#tests is the name of the 2nd service/container. 
+   tests:
+      build:
+        context: .
+        dockerfile: Dockerfile.dev
+      volumes:
+        - .:/react-frontend
+      command: ["npm", "run", "test"]       
+         
